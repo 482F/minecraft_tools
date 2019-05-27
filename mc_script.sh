@@ -11,7 +11,10 @@ SCNAME='minecraft'
  
 # minecraft_serverディレクトリ
 MC_PATH="/home/$USERNAME/minecraft"
- 
+
+
+SERVER_PROPERTIES="${MC_PATH}/server.properties"
+
 # 実行するminecraft_server.jar
 # SERVICE='minecraft_server.1.12.2.jar'
 SERVICE='forge-1.12.2-14.23.5.2772-universal.jar'
@@ -134,6 +137,16 @@ status() {
   fi
 }
 
+get_motd() {
+    cat server.properties | grep -e "^motd" | python3.5 -c 'from sys import stdin; import codecs; print(codecs.decode(stdin.readline(), "unicode-escape"))'
+}
+
+set_motd() {
+    NEW_MOTD=$(echo $@ | python3.5 -c 'from sys import stdin; print(str(stdin.readline().encode("unicode-escape"))[2:-4])')
+    perl -pi -e "s|(?<=^motd\=).*|${NEW_MOTD}|" "${SERVER_PROPERTIES}"
+}
+
+
  
 case "$1" in
   start)
@@ -151,6 +164,12 @@ case "$1" in
   status)
     status
     ;;
+  get_motd)
+    get_motd
+    ;;
+  set_motd)
+    set_motd "$2"
+    ;;
   *)
-    echo  $"Usage: $0 {start|stop|h_backup|f_backup|status}"
+    echo  $"Usage: $0 {start|stop|h_backup|f_backup|status|(get|set)_motd}"
 esac
