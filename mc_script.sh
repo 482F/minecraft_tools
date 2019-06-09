@@ -2,6 +2,8 @@
 #
 # mincraft_server start/stop/backup script
 #
+
+set -ue -o pipefail
  
 # mincraft_server.jar 実行ユーザ
 USERNAME='normal'
