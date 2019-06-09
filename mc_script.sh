@@ -18,8 +18,23 @@ MC_PATH=$(cd $(dirname "${0}"); pwd)
 SERVER_PROPERTIES="${MC_PATH}/server.properties"
 
 # 実行するminecraft_server.jar
-# SERVICE='minecraft_server.1.12.2.jar'
-SERVICE='forge-1.12.2-14.23.5.2772-universal.jar'
+SERVICE=$(ls -1 ${MC_PATH}/*.jar 2>/dev/null || true)
+NoS=$(echo "${SERVICE}" | wc -l);
+
+if [ "" = "${SERVICE}" ]; then
+    echo "there is no .jar file"
+    exit 1
+fi
+
+if [ "1" != "${NoS}" ]; then
+    echo "there is too many .jar files in ${MC_PATH}/"
+    echo "number of .jar files should be only one"
+    echo ""
+    echo "${SERVICE}"
+    exit 1
+fi
+
+exit 0
  
 # メモリ設定
 XMX='1024M'
