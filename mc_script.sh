@@ -141,12 +141,12 @@ f_backup() {
 }
 
 enable_backup(){
-    (crontab -l; echo "0 12 * * * ${SERVER_DIR}/mc_script.sh f_backup") | crontab -
+    (crontab -l; echo "0 12 * * * ${SERVER_DIR}/mc_script.sh backup full") | crontab -
 }
 
 disable_backup(){
     CRONCONF=$(crontab -l)
-    CRONCONF=$(sed -e "s@0 12 \* \* \* ${SERVER_DIR}/mc_script.sh f_backup@@g" <(echo "${CRONCONF}"))
+    CRONCONF=$(sed -e "s@0 12 \* \* \* ${SERVER_DIR}/mc_script.sh backup full@@g" <(echo "${CRONCONF}"))
     (echo "${CRONCONF}") | crontab -
 }
  
@@ -198,11 +198,23 @@ stop)
 reload)
     reload
     ;;
-h_backup)
-    h_backup
-    ;;
-f_backup)
-    f_backup
+backup)
+    case "${2}" in
+    half)
+        h_backup
+        ;;
+    full)
+        f_backup
+        ;;
+    enable)
+        enable_backup
+        ;;
+    disable)
+        disable_backup
+        ;;
+    *)
+        exit 1
+    esac
     ;;
 status)
     status
@@ -225,12 +237,6 @@ monit)
         shift
         monit "${@}"
     esac
-    ;;
-enable_backup)
-    enable_backup
-    ;;
-disable_backup)
-    disable_backup
     ;;
 *)
     echo  $"Usage: $0 {start|stop|reload|h_backup|f_backup|status|(get|set)_motd}"
