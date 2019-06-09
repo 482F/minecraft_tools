@@ -209,11 +209,7 @@ port_get(){
 }
 
 usage(){
-    if [ "" = "${1:-}" ]; then
-        usage "-h"
-        return 0
-    fi
-    case "${1}" in
+    case "${1:-}" in
     start)
         echo "${0} start"
         echo "    start minecraft server"
@@ -231,7 +227,28 @@ usage(){
         echo "    show status of minecraft server and monit status"
         ;;
     backup)
-        if [ "" = "${2:-}" ]; then
+        case "${2:-}" in
+        half)
+            echo "${0} backup half"
+            echo ""
+            echo "    backup a part of minecraft server's data"
+            ;;
+        full)
+            echo "${0} backup full"
+            echo ""
+            echo "    backup all minecraft server's data"
+            ;;
+        enable)
+            echo "${0} backup enable"
+            echo ""
+            echo "    enable full backup everyday 12:00 by cron"
+            ;;
+        disable)
+            echo "${0} backup disable"
+            echo ""
+            echo "    disable full backup everyday 12:00 by cron"
+            ;;
+        *)
             echo "${0} backup subcommand"
             echo ""
             echo "subcommand:"
@@ -239,36 +256,22 @@ usage(){
             echo "    full"
             echo "    enable"
             echo "    disable"
-        else
-            case "${2}" in
-            half)
-                echo "${0} backup half"
-                echo ""
-                echo "    backup a part of minecraft server's data"
-                ;;
-            full)
-                echo "${0} backup full"
-                echo ""
-                echo "    backup all minecraft server's data"
-                ;;
-            enable)
-                echo "${0} backup enable"
-                echo ""
-                echo "    enable full backup everyday 12:00 by cron"
-                ;;
-            disable)
-                echo "${0} backup disable"
-                echo ""
-                echo "    disable full backup everyday 12:00 by cron"
-                ;;
-            *)
-                usage backup
-                ;;
-            esac
-        fi
+            ;;
+        esac
         ;;
     monit)
-        if [ "" = "${2:-}" ]; then
+        case "${2:-}" in
+        add)
+            echo "${0} monit add"
+            echo ""
+            echo "    make conf file in /etc/monit.d/ and reload monit"
+            ;;
+        remove)
+            echo "${0} monit remove"
+            echo ""
+            echo "    remove conf file in /etc/monit.d/ and reload monit"
+            ;;
+        *)
             echo "${0} monit subcommand"
             echo ""
             echo "subcommand:"
@@ -276,90 +279,63 @@ usage(){
             echo "    remove"
             echo "    monit command"
             echo "        ex) ${0} monit {status|monitor|unmonitor...}"
-        else
-            case "${2}" in
-            add)
-                echo "${0} monit add"
-                echo ""
-                echo "    make conf file in /etc/monit.d/ and reload monit"
-                ;;
-            remove)
-                echo "${0} monit remove"
-                echo ""
-                echo "    remove conf file in /etc/monit.d/ and reload monit"
-                ;;
-            *)
-                usage monit
-                ;;
-            esac
-        fi
+            ;;
+        esac
         ;;
     motd)
-        if [ "" = "${2:-}" ]; then
+        case "${2:-}" in
+        get)
+            echo "${0} motd get"
+            echo ""
+            echo "    print motd in server.properties (description which is displaied in server list)"
+            ;;
+        set)
+            echo "${0} motd set"
+            echo ""
+            echo "    set motd STRING in server.properties (description which is displaied in server list)"
+            ;;
+        *)
             echo "${0} motd subcommand"
             echo ""
             echo "subcommand:"
             echo "    get"
             echo "    set STRING"
-        else
-            case "${2}" in
-            get)
-                echo "${0} motd get"
-                echo ""
-                echo "    print motd in server.properties (description which is displaied in server list)"
-                ;;
-            set)
-                echo "${0} motd set"
-                echo ""
-                echo "    set motd STRING in server.properties (description which is displaied in server list)"
-                ;;
-            *)
-                usage motd
-                ;;
-            esac
-        fi
+            ;;
+        esac
         ;;
     screen)
-        if [ "" = "${2:-}" ]; then
+        case "${2:-}" in
+        attach)
+            echo "${0} screen attach"
+            echo ""
+            echo "    attach minecraft server's screen session"
+            ;;
+        *)
             echo "${0} screen subcommand"
             echo ""
             echo "subcommand:"
             echo "    attach"
-        else
-            case "${2}" in
-            attach)
-                echo "${0} screen attach"
-                echo ""
-                echo "    attach minecraft server's screen session"
-                ;;
-            *)
-                usage screen
-            esac
-        fi
+        esac
         ;;
     port)
-        if [ "" = "${2:-}" ]; then
+        case "${2:-}" in
+        get)
+            echo "${0} port get"
+            echo ""
+            echo "    get server's port"
+            ;;
+        set)
+            echo "${0} port set PORTNUM"
+            echo ""
+            echo "    set server's port PORTNUM"
+            ;;
+        *)
             echo "${0} port subcommand"
             echo ""
             echo "subcommand:"
             echo "    set"
             echo "    get"
-        else
-            case "${2}" in
-            get)
-                echo "${0} port get"
-                echo ""
-                echo "    get server's port"
-                ;;
-            set)
-                echo "${0} port set PORTNUM"
-                echo ""
-                echo "    set server's port PORTNUM"
-                ;;
-            *)
-                usage port
-            esac
-        fi
+        esac
         ;;
     *)
         echo "${0} arguments"
@@ -396,10 +372,7 @@ status)
     status
     ;;
 backup)
-    if [ "" = "${2:-}" ]; then
-        usage backup
-    fi
-    case "${2}" in
+    case "${2:-}" in
     half)
         h_backup
         ;;
@@ -418,10 +391,7 @@ backup)
     esac
     ;;
 monit)
-    if [ "" = "${2:-}" ]; then
-        usage monit
-    fi
-    case "${2}" in
+    case "${2:-}" in
     add)
         add_monit
         ;;
@@ -434,10 +404,7 @@ monit)
     esac
     ;;
 motd)
-    if [ "" = "${2:-}" ]; then
-        usage motd
-    fi
-    case "${2}" in
+    case "${2:-}" in
     set)
         set_motd "${3}"
         ;;
@@ -450,10 +417,7 @@ motd)
     esac
     ;;
 screen)
-    if [ "" = "${2:-}" ]; then
-        usage screen
-    fi
-    case "${2}" in
+    case "${2:-}" in
     attach)
         screen -r "${SCNAME}"
         ;;
@@ -463,10 +427,7 @@ screen)
     esac
     ;;
 port)
-    if [ "" = "${2:-}" ]; then
-        usage port
-    fi
-    case "${2}" in
+    case "${2:-}" in
     set)
         port_set "${3:-}"
         ;;
