@@ -9,12 +9,12 @@ set -ue -o pipefail
 USERNAME='normal'
  
 # minecraft_serverディレクトリ
-MC_PATH=$(cd $(dirname "${0}"); pwd)
+SERVER_DIR=$(cd $(dirname "${0}"); pwd)
 
 # screen名
-SCNAME=$(basename "${MC_PATH}")
+SCNAME=$(basename "${SERVER_DIR}")
  
-SERVER_PROPERTIES="${MC_PATH}/server.properties"
+SERVER_PROPERTIES="${SERVER_DIR}/server.properties"
 
 # 実行するminecraft_server.jar
 SERVICE="main.jar"
@@ -43,7 +43,7 @@ XMS='1024M'
  
 ## バックアップ用設定
 # バックアップ格納ディレクトリ
-BK_DIR="/home/$USERNAME/minecraft_directory/backups/${SERVICE}"
+BK_DIR="/home/$USERNAME/minecraft/backups/${SERVICE}"
  
 # バックアップ取得時間
 BK_TIME=`date +%Y%m%d-%H%M%S`
@@ -55,18 +55,18 @@ FULL_BK_NAME="$BK_DIR/full_${BK_TIME}.tar.gz"
 HOUR_BK_NAME="$BK_DIR/hourly_${BK_TIME}.tar"
  
 # 簡易バックアップ対象データ
-BK_FILE="$MC_PATH/world \
-         $MC_PATH/banned-ips.json \
-         $MC_PATH/banned-players.json \
-         $MC_PATH/ops.json \
-         $MC_PATH/server.properties \
-         $MC_PATH/usercache.json \
-         $MC_PATH/whitelist.json"
+BK_FILE="$SERVER_DIR/world \
+         $SERVER_DIR/banned-ips.json \
+         $SERVER_DIR/banned-players.json \
+         $SERVER_DIR/ops.json \
+         $SERVER_DIR/server.properties \
+         $SERVER_DIR/usercache.json \
+         $SERVER_DIR/whitelist.json"
  
 # バックアップデータ保存数
 BK_GEN="3"
  
-cd $MC_PATH
+cd $SERVER_DIR
  
 if [ ! -d $BK_DIR ]; then
     mkdir $BK_DIR
@@ -134,7 +134,7 @@ f_backup() {
         echo "Stopped minecraft_server"
         echo "Full Backup start ..."
         screen -ls
-        tar cfvz $FULL_BK_NAME $MC_PATH
+        tar cfvz $FULL_BK_NAME $SERVER_DIR
         sleep 10
         echo "Full Backup compleate!"
         find $BK_DIR -name "mc_backup_full*.tar.gz" -type f -mtime +$BK_GEN -exec rm {} \;
