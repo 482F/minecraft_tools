@@ -11,6 +11,8 @@ USERNAME='normal'
 # minecraft_serverディレクトリ
 SERVER_DIR=$(cd $(dirname "${0}"); pwd)
 
+MC_DIR=$(dirname $(dirname "${SERVER_DIR}"))
+
 # screen名
 SCNAME=$(basename "${SERVER_DIR}")
  
@@ -43,7 +45,7 @@ XMS='1024M'
  
 ## バックアップ用設定
 # バックアップ格納ディレクトリ
-BK_DIR="/home/$USERNAME/minecraft/backups/${SERVICE}"
+BK_DIR="${MC_DIR}/backups/${SERVICE}"
  
 # バックアップ取得時間
 BK_TIME=`date +%Y%m%d-%H%M%S`
