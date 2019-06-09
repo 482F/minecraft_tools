@@ -8,17 +8,17 @@ set -ue -o pipefail
 # mincraft_server.jar 実行ユーザ
 USERNAME='normal'
  
-# screen名
-SCNAME='minecraft'
- 
 # minecraft_serverディレクトリ
 MC_PATH=$(cd $(dirname "${0}"); pwd)
 
-
+# screen名
+SCNAME='minecraft'
+ 
 SERVER_PROPERTIES="${MC_PATH}/server.properties"
 
 # 実行するminecraft_server.jar
 SERVICE=$(ls -1 ${MC_PATH}/*.jar 2>/dev/null || true)
+SERVICE=$(echo "${SERVICE}" | xargs -L 1 basename)
 NoS=$(echo "${SERVICE}" | wc -l);
 
 if [ "" = "${SERVICE}" ]; then
@@ -34,8 +34,6 @@ if [ "1" != "${NoS}" ]; then
     exit 1
 fi
 
-exit 0
- 
 # メモリ設定
 XMX='1024M'
 XMS='1024M'
