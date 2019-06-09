@@ -16,12 +16,13 @@ SCNAME=$(basename "${SERVER_DIR}")
 SERVER_PROPERTIES="${SERVER_DIR}/server.properties"
 
 # 実行するminecraft_server.jar
-SERVICE="main.jar"
+SERVICENAME="main.jar"
+SERVICE="${SERVER_DIR}/${SERVICENAME}"
 
 if [ ! -f "${SERVICE}" ]; then
     echo "there is no \"main.jar\""
     echo ""
-    declare -a JARS=($(ls -1 *.jar))
+    declare -a JARS=($(ls -1 "${SERVER_DIR}/*.jar"))
     NoJ="${#JARS[@]}"
     nl -w 3 <(echo "${JARS[@]}" | xargs -n1 echo)
     echo ""
@@ -42,7 +43,7 @@ XMS='1024M'
  
 ## バックアップ用設定
 # バックアップ格納ディレクトリ
-BK_DIR="${MC_DIR}/backups/${SERVICE}"
+BK_DIR="${MC_DIR}/backups/${SERVICENAME}"
  
 # バックアップ取得時間
 BK_TIME=`date +%Y%m%d-%H%M%S`
