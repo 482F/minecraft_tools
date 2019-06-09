@@ -188,6 +188,134 @@ remove_monit() {
     sudo monit reload
 }
 
+usage(){
+    case "${1}" in
+    start)
+        echo "${0} start"
+        echo "    start minecraft server"
+        ;;
+    stop)
+        echo "${0} stop"
+        echo "    stop minecraft server"
+        ;;
+    reload)
+        echo "${0} reload"
+        echo "    stop and start minecraft server"
+        ;;
+    status)
+        echo "${0} status"
+        echo "    show status of minecraft server and monit status"
+        ;;
+    backup)
+        if [ -z "${2}" ]; then
+            echo "${0} backup subcommand"
+            echo ""
+            echo "subcommand:"
+            echo "    half"
+            echo "    full"
+            echo "    enable"
+            echo "    disable"
+        else
+            case "${2}" in
+            half)
+                echo "${0} backup half"
+                echo ""
+                echo "    backup a part of minecraft server's data"
+                ;;
+            full)
+                echo "${0} backup full"
+                echo ""
+                echo "    backup all minecraft server's data"
+                ;;
+            enable)
+                echo "${0} backup enable"
+                echo ""
+                echo "    enable full backup everyday 12:00 by cron"
+                ;;
+            disable)
+                echo "${0} backup disable"
+                echo ""
+                echo "    disable full backup everyday 12:00 by cron"
+                ;;
+            *)
+                usage backup
+                ;;
+            esac
+        fi
+        ;;
+    monit)
+        if [ -z "${2}" ]; then
+            echo "${0} monit subcommand"
+            echo ""
+            echo "subcommand:"
+            echo "    add"
+            echo "    remove"
+            echo "    monit command"
+            echo "        ex) ${0} monit {status|monitor|unmonitor...}"
+        else
+            case "${2}" in
+            add)
+                echo "${0} monit add"
+                echo ""
+                echo "    make conf file in /etc/monit.d/ and reload monit"
+                ;;
+            remove)
+                echo "${0} monit remove"
+                echo ""
+                echo "    remove conf file in /etc/monit.d/ and reload monit"
+                ;;
+            *)
+                usage monit
+                ;;
+            esac
+        fi
+        ;;
+    motd)
+        if [ -z "${2}" ]; then
+            echo "${0} motd subcommand"
+            echo ""
+            echo "subcommand:"
+            echo "    get"
+            echo "    set STRING"
+        else
+            case "${2}" in
+            get)
+                echo "${0} motd get"
+                echo ""
+                echo "    print motd in server.properties (description which is displaied in server list)"
+                ;;
+            set)
+                echo "${0} motd set"
+                echo ""
+                echo "    set motd STRING in server.properties (description which is displaied in server list)"
+                ;;
+            *)
+                usage motd
+                ;;
+            esac
+        fi
+        ;;
+    *)
+        echo "${0} arguments"
+        echo ""
+        echo "arguments:"
+        echo "    start"
+        echo "    stop"
+        echo "    reload"
+        echo "    status"
+        echo "    backup subcommand"
+        echo "    monit subcommand"
+        echo "    motd subcommand"
+        ;;
+    esac
+    return 0
+}
+
+if [ "--help" = "${@:$#:1}" ] || [ "-h" = "${@:$#:1}" ]; then
+    usage "${@}"
+    exit 0
+fi
+
 case "${1}" in
 start)
     start
@@ -245,5 +373,6 @@ motd)
     esac
     ;;
 *)
-    echo  $"Usage: $0 {start|stop|reload|h_backup|f_backup|status|(get|set)_motd}"
+    usage
+    exit 1
 esac
