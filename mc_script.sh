@@ -232,11 +232,17 @@ monit)
         monit "${@}"
     esac
     ;;
-get_motd)
-    get_motd
-    ;;
-set_motd)
-    set_motd "$2"
+motd)
+    case "${2}" in
+    set)
+        set_motd "${3}"
+        ;;
+    get)
+        get_motd
+        ;;
+    *)
+        exit 1
+    esac
     ;;
 *)
     echo  $"Usage: $0 {start|stop|reload|h_backup|f_backup|status|(get|set)_motd}"
