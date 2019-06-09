@@ -379,6 +379,7 @@ backup)
         disable_backup
         ;;
     *)
+        usage backup
         exit 1
     esac
     ;;
@@ -410,6 +411,7 @@ motd)
         get_motd
         ;;
     *)
+        usage motd
         exit 1
     esac
     ;;
@@ -422,6 +424,7 @@ screen)
         screen -r "${SCNAME}"
         ;;
     *)
+        usage screen
         exit 1
     esac
     ;;
