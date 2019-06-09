@@ -73,7 +73,12 @@ if [ ! -d $BK_DIR ]; then
 fi
  
 ME=`whoami`
- 
+
+send_command_to_screen(){
+    screen -p 0 -S "${SCNAME}" -X eval "stuff \"${1}\"\015"
+    return 0
+}
+
 start() {
     if pgrep -f "${SCNAME} java" > /dev/null; then
         echo "$SERVICE is already running!"
@@ -86,10 +91,10 @@ start() {
 stop() {
     if pgrep -f "${SCNAME} java" > /dev/null; then
         echo "Stopping $SERVICE"
-        screen -p 0 -S $SCNAME -X eval 'stuff "say SERVER SHUTTING DOWN IN 3 SECONDS. Saving map..."\015'
-        screen -p 0 -S $SCNAME -X eval 'stuff "save-all"\015'
+        send_command_to_screen "say SERVER SHUTTING DOWN IN 3 SECONDS. Saving map..."
+        send_command_to_screen "save-all"
         sleep 3
-        screen -p 0 -S $SCNAME -X eval 'stuff "stop"\015'
+        send_command_to_screen "stop"
         sleep 10
         echo "Stopped minecraftserver"
     else
@@ -105,12 +110,12 @@ reload() {
 h_backup() {
     if pgrep -f $SERVICE > /dev/null; then
         echo "Backup start minecraft data..."
-        screen -p 0 -S $SCNAME -X eval 'stuff "save-all"\015'
+        send_command_to_screen "save-all"
         sleep 10
-        screen -p 0 -S $SCNAME -X eval 'stuff "save-off"\015'
+        send_command_to_screen "save-off"
         tar cfv $HOUR_BK_NAME $BK_FILE
         sleep 10
-        screen -p 0 -S $SCNAME -X eval 'stuff "save-on"\015'
+        send_command_to_screen "save-on"
         echo "minecraft_server backup compleate!"
         gzip -f $HOUR_BK_NAME
         find $BK_DIR -name "mc_backup_hourly_*.tar.gz" -type f -mtime +$BK_GEN -exec rm {} \;
@@ -122,10 +127,10 @@ h_backup() {
 f_backup() {
     if pgrep -f $SERVICE > /dev/null; then
         echo "Full backup start minecraft data..."
-        screen -p 0 -S $SCNAME -X eval 'stuff "say サーバーの再起動が約 10 秒後に行われます。"\015'
-        screen -p 0 -S $SCNAME -X eval 'stuff "save-all"\015'
+        send_command_to_screen "say サーバーの再起動が約 10 秒後に行われます。"
+        send_command_to_screen "save-all"
         sleep 10
-        screen -p 0 -S $SCNAME -X eval 'stuff "stop"\015'
+        send_command_to_screen "stop"
         echo "Stopped minecraft_server"
         echo "Full Backup start ..."
         screen -ls
