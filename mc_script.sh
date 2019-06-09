@@ -30,16 +30,16 @@ XMS='1024M'
  
 ## バックアップ用設定
 # バックアップ格納ディレクトリ
-BK_DIR="/home/$USERNAME/minecraft_backup"
+BK_DIR="/home/$USERNAME/minecraft_directory/backups/${SERVICE}"
  
 # バックアップ取得時間
 BK_TIME=`date +%Y%m%d-%H%M%S`
  
 # 完全バックアップデータ名
-FULL_BK_NAME="$BK_DIR/mc_backup_full_${SERVICE}_${BK_TIME}.tar.gz"
+FULL_BK_NAME="$BK_DIR/full_${BK_TIME}.tar.gz"
  
 # 簡易パックアップデータ名
-HOUR_BK_NAME="$BK_DIR/mc_backup_hourly_${SERVICE}_${BK_TIME}.tar"
+HOUR_BK_NAME="$BK_DIR/hourly_${BK_TIME}.tar"
  
 # 簡易バックアップ対象データ
 BK_FILE="$MC_PATH/world \
