@@ -12,7 +12,7 @@ USERNAME='normal'
 MC_PATH=$(cd $(dirname "${0}"); pwd)
 
 # screen名
-SCNAME='minecraft'
+SCNAME=$(basename "${MC_PATH}")
  
 SERVER_PROPERTIES="${MC_PATH}/server.properties"
 
