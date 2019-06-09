@@ -21,7 +21,20 @@ SERVICE="main.jar"
 
 if [ ! -f "${SERVICE}" ]; then
     echo "there is no \"main.jar\""
-    exit 1
+    echo ""
+    declare -a JARS=($(ls -1 *.jar))
+    NoJ="${#JARS[@]}"
+    nl -w 3 <(echo "${JARS[@]}" | xargs -n1 echo)
+    echo ""
+    echo "select ln target"
+    read TARGET_NUM
+    if ! expr "${TARGET_NUM}" + 1 >&/dev/null || [ ${TARGET_NUM} -lt 1 ] || [ ${NoJ} -lt ${TARGET_NUM} ]; then
+        echo "invalid target number"
+        exit 1
+    fi
+    TARGET_NUM=$((TARGET_NUM-1))
+    ln -s "${JARS[${TARGET_NUM}]}" "main.jar"
+    exit 0
 fi
 
 # メモリ設定
