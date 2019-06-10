@@ -79,6 +79,13 @@ send_command_to_screen(){
     return 0
 }
 
+multi_line_echo(){
+    for arg in "${@}"; do
+        echo "${arg}"
+    done
+    return 0
+}
+
 start() {
     if pgrep -f "${SCNAME} java" > /dev/null; then
         echo "$SERVICE is already running!"
