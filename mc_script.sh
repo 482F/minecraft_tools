@@ -206,12 +206,60 @@ screen_attach(){
 }
 
 port_set(){
+    local PC=$(port_check)
+    port_close
     perl -pi -e "s|(?<=^server-port\=).*|${1}|" "${SERVER_PROPERTIES}"
+    if [ -z "{PC:-}" ]; then
+        port_open
+    fi
     return 0
 }
 
 port_get(){
     cat "${SERVER_PROPERTIES}" | grep "server-port" | sed -e "s@^server-port\=@@g"
+    return 0
+}
+
+port_open(){
+    port_close
+    local PORT="$(port_get)"
+    local IPTABLES="$(sudo cat "/etc/sysconfig/iptables")"
+    if ! echo "${IPTABLES}" | grep -qE "^# minecraft$"; then
+        local -a FILTER_LINE_NUM="$(echo "${IPTABLES}" | grep -nE "^\*filter$" | sed -e "s/:.*//g")"
+        local -a COMMIT_LINE_NUMS=($(echo "${IPTABLES}" | grep -nE "^COMMIT$" | sed -e "s/:.*//g"))
+        for COMMIT_LINE_NUM in "${COMMIT_LINE_NUMS[@]}"; do
+            if [ ${FILTER_LINE_NUM} -lt ${COMMIT_LINE_NUM} ]; then
+                break
+            fi
+        done
+        IPTABLES="$(echo "${IPTABLES}" | sed -e "${COMMIT_LINE_NUM}i #dummy_line\n# minecraft\n" | sed -e "s/#dummy_line//g")"
+    fi
+    local ins_line="$(echo "${IPTABLES}" | grep -nE "^# minecraft$" | sed -e "s/:.*//g")"
+    IPTABLES="$(echo "${IPTABLES}" | sed -e "${ins_line}a # ${SCNAME}\n")"
+    ins_line=$((ins_line+1))
+    for ip in $(cat "${SERVER_DIR}/allowed_ip_list.txt"); do
+        IPTABLES="$(echo "${IPTABLES}" | sed -e "${ins_line}a -A INPUT -s ${ip}/32 -p tcp -m state --state NEW -m tcp --dport ${PORT} -j ACCEPT")"
+    done
+    echo "${IPTABLES}" | sudo tee "/etc/sysconfig/iptables" > /dev/null
+    sudo service iptables reload
+    return 0
+}
+
+port_close(){
+    local PORT="$(port_get)"
+    local IPTABLES="$(sudo cat "/etc/sysconfig/iptables")"
+    echo "${IPTABLES}" |
+    sed -e "/# ${SCNAME}/d" |
+    sed -e "/-A INPUT -s .*\/32 -p tcp -m state --state NEW -m tcp --dport ${PORT} -j ACCEPT/d" |
+    sudo tee "/etc/sysconfig/iptables" > /dev/null
+    sudo service iptables reload
+    return 0
+}
+
+port_check(){
+    local PORT="$(port_get)"
+    sudo grep "^-A INPUT -s .*\/32 -p tcp -m state --state NEW -m tcp --dport ${PORT} -j ACCEPT$" /etc/sysconfig/iptables |
+    grep -oE "([0-9]{1,3}\.){3}[0-9]"
     return 0
 }
 
@@ -334,7 +382,22 @@ usage(){
         set)
             echo "${0} port set PORTNUM"
             echo ""
-            echo "    set server's port PORTNUM"
+            echo "    set server's port PORTNUM and change setting of iptables"
+            ;;
+        open)
+            echo "${0} port open"
+            echo ""
+            echo "    open server's port by iptables according to allowed_ip_list.txt"
+            ;;
+        close)
+            echo "${0} port close"
+            echo ""
+            echo "    close server's port by iptables"
+            ;;
+        check)
+            echo "${0} port check"
+            echo ""
+            echo "    show which ip address are allowed to access"
             ;;
         *)
             echo "${0} port subcommand"
@@ -342,6 +405,9 @@ usage(){
             echo "subcommand:"
             echo "    set"
             echo "    get"
+            echo "    open"
+            echo "    close"
+            echo "    check"
         esac
         ;;
     *)
@@ -440,6 +506,15 @@ port)
         ;;
     get)
         port_get
+        ;;
+    open)
+        port_open
+        ;;
+    close)
+        port_close
+        ;;
+    check)
+        port_check
         ;;
     *)
         usage port
