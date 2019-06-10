@@ -221,6 +221,10 @@ port_get(){
 }
 
 port_open(){
+    if [ ! -f "${SERVER_DIR}/allowed_ip_list.txt" ]; then
+        echo "${SERVER_DIR}/allowed_ip_list.txt does not exist."
+        exit 1
+    fi
     port_close
     local PORT="$(port_get)"
     local IPTABLES="$(sudo cat "/etc/sysconfig/iptables")"
