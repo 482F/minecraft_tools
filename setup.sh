@@ -13,7 +13,7 @@ SERVERS="$(ls -1 "${SERVERS_DIR}")"
 
 echo "${SERVERS}" | while read SERVER; do
     SERVER="${SERVERS_DIR}/${SERVER}"
-    if [ ! -f "${SCRIPT_DIR}/mc_script.sh" ]; then
+    if [ ! -f "${SERVER}/mc_script.sh" ]; then
         ln -s "${SCRIPT_DIR}/mc_script.sh" "${SERVER}/mc_script.sh"
     fi
 done
