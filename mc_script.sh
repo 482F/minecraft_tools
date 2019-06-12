@@ -160,15 +160,17 @@ set_motd() {
 }
 
 add_monit() {
-    echo "check process minecraft matching \"SCREEN -AmdS minecraft java ${SCNAME}\"" | sudo tee "/etc/monit.d/${SCNAME}.conf"
-    echo '    not every "0-10 12 * * *"' | sudo tee -a "/etc/monit.d/${SCNAME}.conf"
-    echo "    start program = "/usr/bin/sudo -u normal "${SERVER_DIR}/mc_script.sh" start"" | sudo tee -a "/etc/monit.d/${SCNAME}.conf"
-    echo "    stop program = "/usr/bin/sudo -u normal "${SERVER_DIR}/mc_script.sh" stop"" | sudo tee -a "/etc/monit.d/${SCNAME}.conf"
-    echo "    if 3 restarts within 3 cycles then timeout" | sudo tee -a "/etc/monit.d/${SCNAME}.conf"
+    echo "check process \"${SCNAME}\" matching \"SCREEN -AmdS minecraft java ${SCNAME}\"" | sudo tee "/etc/monit.d/${SCNAME}.conf" > /dev/null
+    echo '    not every "0-10 12 * * *"' | sudo tee -a "/etc/monit.d/${SCNAME}.conf" > /dev/null
+    echo "    start program = \"/usr/bin/sudo -u normal ${SERVER_DIR}/mc_script.sh start"\" | sudo tee -a "/etc/monit.d/${SCNAME}.conf" > /dev/null
+    echo "    stop program = \"/usr/bin/sudo -u normal ${SERVER_DIR}/mc_script.sh stop"\" | sudo tee -a "/etc/monit.d/${SCNAME}.conf" > /dev/null
+    echo "    if 3 restarts within 3 cycles then timeout" | sudo tee -a "/etc/monit.d/${SCNAME}.conf" > /dev/null
+    sudo monit reload
 }
 
 remove_monit() {
     sudo rm "/etc/monit.d/${SCNAME}.conf"
+    sudo monit reload
 }
 
 monitor(){
