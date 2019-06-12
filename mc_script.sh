@@ -169,7 +169,15 @@ add_monit() {
 remove_monit() {
     sudo rm "/etc/monit.d/${SCNAME}.conf"
 }
+
+monitor(){
+    sudo monit monitor "${SCNAME}"
+}
  
+unmonitor(){
+    sudo monit unmonitor "${SCNAME}"
+}
+
 case "$1" in
     start)
         start
@@ -200,6 +208,12 @@ case "$1" in
         ;;
     remove_monit)
         remove_monit
+        ;;
+    monitor)
+        monitor
+        ;;
+    unmonitor)
+        unmonitor
         ;;
     *)
         echo  $"Usage: $0 {start|stop|reload|h_backup|f_backup|status|(get|set)_motd}"
