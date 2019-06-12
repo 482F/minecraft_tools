@@ -43,12 +43,12 @@ HOUR_BK_NAME="$BK_DIR/mc_backup_hourly_${SERVICE}_${BK_TIME}.tar"
  
 # 簡易バックアップ対象データ
 BK_FILE="$MC_PATH/world \
-  $MC_PATH/banned-ips.json \
-  $MC_PATH/banned-players.json \
-  $MC_PATH/ops.json \
-  $MC_PATH/server.properties \
-  $MC_PATH/usercache.json \
-  $MC_PATH/whitelist.json"
+         $MC_PATH/banned-ips.json \
+         $MC_PATH/banned-players.json \
+         $MC_PATH/ops.json \
+         $MC_PATH/server.properties \
+         $MC_PATH/usercache.json \
+         $MC_PATH/whitelist.json"
  
 # バックアップデータ保存数
 BK_GEN="3"
@@ -76,7 +76,7 @@ start() {
 }
  
 stop() {
-  if pgrep -u $USERNAME -f $SERVICE > /dev/null; then
+  if pgrep -u $USERNAME -f "${SCNAME} java" > /dev/null; then
     echo "Stopping $SERVICE"
     screen -p 0 -S $SCNAME -X eval 'stuff "say SERVER SHUTTING DOWN IN 3 SECONDS. Saving map..."\015'
     screen -p 0 -S $SCNAME -X eval 'stuff "save-all"\015'
