@@ -170,6 +170,10 @@ set_motd() {
     perl -pi -e "s|(?<=^motd\=).*|${NEW_MOTD}|" "${SERVER_PROPERTIES}"
 }
 
+monit(){
+    sudo monit "${@}" "${SCNAME}"
+}
+
 add_monit() {
     echo "check process \"${SCNAME}\" matching \"SCREEN -AmdS ${SCNAME} java*\"" | sudo tee "/etc/monit.d/${SCNAME}.conf" > /dev/null
     echo '    not every "0-10 12 * * *"' | sudo tee -a "/etc/monit.d/${SCNAME}.conf" > /dev/null
@@ -184,58 +188,50 @@ remove_monit() {
     sudo monit reload
 }
 
-monitor(){
-    sudo monit monitor "${SCNAME}"
-}
- 
-unmonitor(){
-    sudo monit unmonitor "${SCNAME}"
-}
-
-
 case "$1" in
-    start)
-        start
-        ;;
-    stop)
-        stop
-        ;;
-    reload)
-        reload
-        ;;
-    h_backup)
-        h_backup
-        ;;
-    f_backup)
-        f_backup
-        ;;
-    status)
-        status
-        ;;
-    get_motd)
-        get_motd
-        ;;
-    set_motd)
-        set_motd "$2"
-        ;;
-    add_monit)
+start)
+    start
+    ;;
+stop)
+    stop
+    ;;
+reload)
+    reload
+    ;;
+h_backup)
+    h_backup
+    ;;
+f_backup)
+    f_backup
+    ;;
+status)
+    status
+    ;;
+get_motd)
+    get_motd
+    ;;
+set_motd)
+    set_motd "$2"
+    ;;
+monit)
+    case "${2}" in
+    add)
         add_monit
         ;;
-    remove_monit)
+    remove)
         remove_monit
         ;;
-    monitor)
-        monitor
-        ;;
-    unmonitor)
-        unmonitor
-        ;;
-    enable_backup)
-        enable_backup
-        ;;
-    disable_backup)
-        disable_backup
-        ;;
     *)
-        echo  $"Usage: $0 {start|stop|reload|h_backup|f_backup|status|(get|set)_motd}"
+        shift
+        monit "${@}"
+    esac
+    ;;
+enable_backup)
+    enable_backup
+    ;;
+disable_backup)
+    disable_backup
+    ;;
+*)
+    echo  $"Usage: $0 {start|stop|reload|h_backup|f_backup|status|(get|set)_motd}"
 esac
