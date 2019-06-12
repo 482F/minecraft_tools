@@ -198,6 +198,16 @@ screen_attach(){
     return 0
 }
 
+port_set(){
+    perl -pi -e "s|(?<=^server-port\=).*|${1}|" "${SERVER_PROPERTIES}"
+    return 0
+}
+
+port_get(){
+    cat "${SERVER_PROPERTIES}" | grep "server-port" | sed -e "s@^server-port\=@@g"
+    return 0
+}
+
 usage(){
     if [ "" = "${1:-}" ]; then
         usage "-h"
@@ -327,6 +337,30 @@ usage(){
             esac
         fi
         ;;
+    port)
+        if [ "" = "${2:-}" ]; then
+            echo "${0} port subcommand"
+            echo ""
+            echo "subcommand:"
+            echo "    set"
+            echo "    get"
+        else
+            case "${2}" in
+            get)
+                echo "${0} port get"
+                echo ""
+                echo "    get server's port"
+                ;;
+            set)
+                echo "${0} port set PORTNUM"
+                echo ""
+                echo "    set server's port PORTNUM"
+                ;;
+            *)
+                usage port
+            esac
+        fi
+        ;;
     *)
         echo "${0} arguments"
         echo ""
@@ -425,6 +459,22 @@ screen)
         ;;
     *)
         usage screen
+        exit 1
+    esac
+    ;;
+port)
+    if [ "" = "${2:-}" ]; then
+        usage port
+    fi
+    case "${2}" in
+    set)
+        port_set "${3:-}"
+        ;;
+    get)
+        port_get
+        ;;
+    *)
+        usage port
         exit 1
     esac
     ;;
