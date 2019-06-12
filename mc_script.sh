@@ -309,6 +309,24 @@ usage(){
             esac
         fi
         ;;
+    screen)
+        if [ "" = "${2:-}" ]; then
+            echo "${0} screen subcommand"
+            echo ""
+            echo "subcommand:"
+            echo "    attach"
+        else
+            case "${2}" in
+            attach)
+                echo "${0} screen attach"
+                echo ""
+                echo "    attach minecraft server's screen session"
+                ;;
+            *)
+                usage screen
+            esac
+        fi
+        ;;
     *)
         echo "${0} arguments"
         echo ""
