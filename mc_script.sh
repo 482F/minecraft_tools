@@ -198,6 +198,9 @@ stop)
 reload)
     reload
     ;;
+status)
+    status
+    ;;
 backup)
     case "${2}" in
     half)
@@ -216,15 +219,6 @@ backup)
         exit 1
     esac
     ;;
-status)
-    status
-    ;;
-get_motd)
-    get_motd
-    ;;
-set_motd)
-    set_motd "$2"
-    ;;
 monit)
     case "${2}" in
     add)
@@ -237,6 +231,12 @@ monit)
         shift
         monit "${@}"
     esac
+    ;;
+get_motd)
+    get_motd
+    ;;
+set_motd)
+    set_motd "$2"
     ;;
 *)
     echo  $"Usage: $0 {start|stop|reload|h_backup|f_backup|status|(get|set)_motd}"
