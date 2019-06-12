@@ -141,6 +141,7 @@ f_backup() {
 }
  
 status() {
+    sudo monit status "${SCNAME}"
     if pgrep -f $SERVICE > /dev/null; then
         echo "$SERVICE is already running!"
         exit 0
@@ -160,7 +161,7 @@ set_motd() {
 }
 
 add_monit() {
-    echo "check process \"${SCNAME}\" matching \"SCREEN -AmdS minecraft java ${SCNAME}\"" | sudo tee "/etc/monit.d/${SCNAME}.conf" > /dev/null
+    echo "check process \"${SCNAME}\" matching \"SCREEN -AmdS ${SCNAME} java*\"" | sudo tee "/etc/monit.d/${SCNAME}.conf" > /dev/null
     echo '    not every "0-10 12 * * *"' | sudo tee -a "/etc/monit.d/${SCNAME}.conf" > /dev/null
     echo "    start program = \"/usr/bin/sudo -u normal ${SERVER_DIR}/mc_script.sh start"\" | sudo tee -a "/etc/monit.d/${SCNAME}.conf" > /dev/null
     echo "    stop program = \"/usr/bin/sudo -u normal ${SERVER_DIR}/mc_script.sh stop"\" | sudo tee -a "/etc/monit.d/${SCNAME}.conf" > /dev/null
@@ -180,6 +181,7 @@ monitor(){
 unmonitor(){
     sudo monit unmonitor "${SCNAME}"
 }
+
 
 case "$1" in
     start)
