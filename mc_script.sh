@@ -139,6 +139,16 @@ f_backup() {
         echo "$SERVICE was not runnning."
     fi
 }
+
+enable_backup(){
+    (crontab -l; echo "0 12 * * * ${SERVER_DIR}/mc_script.sh f_backup") | crontab -
+}
+
+disable_backup(){
+    CRONCONF=$(crontab -l)
+    CRONCONF=$(sed -e "s@0 12 \* \* \* ${SERVER_DIR}/mc_script.sh f_backup@@g" <(echo "${CRONCONF}"))
+    (echo "${CRONCONF}") | crontab -
+}
  
 status() {
     sudo monit status "${SCNAME}"
@@ -219,6 +229,12 @@ case "$1" in
         ;;
     unmonitor)
         unmonitor
+        ;;
+    enable_backup)
+        enable_backup
+        ;;
+    disable_backup)
+        disable_backup
         ;;
     *)
         echo  $"Usage: $0 {start|stop|reload|h_backup|f_backup|status|(get|set)_motd}"
