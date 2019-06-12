@@ -76,13 +76,13 @@ ME=`whoami`
  
 if [ $ME != $USERNAME ]; then
     echo "Please run the $USERNAME user."
-    exit
+    exit 1
 fi
  
 start() {
     if pgrep -u $USERNAME -f "${SCNAME} java" > /dev/null; then
         echo "$SERVICE is already running!"
-            exit
+            exit 1
     fi
     echo "Starting $SERVICE..."
     screen -AmdS $SCNAME java -Xmx$XMX -Xms$XMS -jar $SERVICE nogui
@@ -148,10 +148,10 @@ f_backup() {
 status() {
     if pgrep -u $USERNAME -f $SERVICE > /dev/null; then
         echo "$SERVICE is already running!"
-        exit
+        exit 0
     else
         echo "$SERVICE is not running!"
-        exit
+        exit 0
     fi
 }
 
