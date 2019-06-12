@@ -339,6 +339,9 @@ status)
     status
     ;;
 backup)
+    if [ "" = "${2:-}" ]; then
+        usage backup
+    fi
     case "${2}" in
     half)
         h_backup
@@ -357,6 +360,9 @@ backup)
     esac
     ;;
 monit)
+    if [ "" = "${2:-}" ]; then
+        usage monit
+    fi
     case "${2}" in
     add)
         add_monit
@@ -370,6 +376,9 @@ monit)
     esac
     ;;
 motd)
+    if [ "" = "${2:-}" ]; then
+        usage motd
+    fi
     case "${2}" in
     set)
         set_motd "${3}"
