@@ -5,9 +5,6 @@
 
 set -ue -o pipefail
  
-# mincraft_server.jar 実行ユーザ
-USERNAME='normal'
- 
 # minecraft_serverディレクトリ
 SERVER_DIR=$(cd $(dirname "${0}"); pwd)
 
@@ -76,13 +73,8 @@ fi
  
 ME=`whoami`
  
-if [ $ME != $USERNAME ]; then
-    echo "Please run the $USERNAME user."
-    exit 1
-fi
- 
 start() {
-    if pgrep -u $USERNAME -f "${SCNAME} java" > /dev/null; then
+    if pgrep -f "${SCNAME} java" > /dev/null; then
         echo "$SERVICE is already running!"
             exit 1
     fi
@@ -91,7 +83,7 @@ start() {
 }
  
 stop() {
-    if pgrep -u $USERNAME -f "${SCNAME} java" > /dev/null; then
+    if pgrep -f "${SCNAME} java" > /dev/null; then
         echo "Stopping $SERVICE"
         screen -p 0 -S $SCNAME -X eval 'stuff "say SERVER SHUTTING DOWN IN 3 SECONDS. Saving map..."\015'
         screen -p 0 -S $SCNAME -X eval 'stuff "save-all"\015'
@@ -110,7 +102,7 @@ reload() {
 }
  
 h_backup() {
-    if pgrep -u $USERNAME -f $SERVICE > /dev/null; then
+    if pgrep -f $SERVICE > /dev/null; then
         echo "Backup start minecraft data..."
         screen -p 0 -S $SCNAME -X eval 'stuff "save-all"\015'
         sleep 10
@@ -127,7 +119,7 @@ h_backup() {
 }
  
 f_backup() {
-    if pgrep -u $USERNAME -f $SERVICE > /dev/null; then
+    if pgrep -f $SERVICE > /dev/null; then
         echo "Full backup start minecraft data..."
         screen -p 0 -S $SCNAME -X eval 'stuff "say サーバーの再起動が約 10 秒後に行われます。"\015'
         screen -p 0 -S $SCNAME -X eval 'stuff "save-all"\015'
@@ -148,7 +140,7 @@ f_backup() {
 }
  
 status() {
-    if pgrep -u $USERNAME -f $SERVICE > /dev/null; then
+    if pgrep -f $SERVICE > /dev/null; then
         echo "$SERVICE is already running!"
         exit 0
     else
