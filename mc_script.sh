@@ -188,9 +188,14 @@ add_monit() {
     sudo monit reload
 }
 
-remove_monit() {
+remove_monit(){
     sudo rm "/etc/monit.d/${SCNAME}.conf"
     sudo monit reload
+}
+
+screen_attach(){
+    screen -r "${SCNAME}"
+    return 0
 }
 
 usage(){
@@ -385,6 +390,18 @@ motd)
         ;;
     get)
         get_motd
+        ;;
+    *)
+        exit 1
+    esac
+    ;;
+screen)
+    if [ "" = "${2:-}" ]; then
+        usage screen
+    fi
+    case "${2}" in
+    attach)
+        screen -r "${SCNAME}"
         ;;
     *)
         exit 1
