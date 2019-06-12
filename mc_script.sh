@@ -188,7 +188,7 @@ remove_monit() {
     sudo monit reload
 }
 
-case "$1" in
+case "${1}" in
 start)
     start
     ;;
