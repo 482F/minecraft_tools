@@ -67,7 +67,7 @@ if [ $ME != $USERNAME ]; then
 fi
  
 start() {
-  if pgrep -u $USERNAME -f $SERVICE > /dev/null; then
+  if pgrep -u $USERNAME -f "${SCNAME} java" > /dev/null; then
     echo "$SERVICE is already running!"
     exit
   fi
