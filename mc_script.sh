@@ -17,20 +17,10 @@ SCNAME=$(basename "${MC_PATH}")
 SERVER_PROPERTIES="${MC_PATH}/server.properties"
 
 # 実行するminecraft_server.jar
-SERVICE=$(ls -1 ${MC_PATH}/*.jar 2>/dev/null || true)
-SERVICE=$(echo "${SERVICE}" | xargs -L 1 basename)
-NoS=$(echo "${SERVICE}" | wc -l);
+SERVICE="main.jar"
 
-if [ "" = "${SERVICE}" ]; then
-    echo "there is no .jar file"
-    exit 1
-fi
-
-if [ "1" != "${NoS}" ]; then
-    echo "there is too many .jar files in ${MC_PATH}/"
-    echo "number of .jar files should be only one"
-    echo ""
-    echo "${SERVICE}"
+if [ ! -f "${SERVICE}" ]; then
+    echo "there is no \"main.jar\""
     exit 1
 fi
 
