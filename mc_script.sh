@@ -189,6 +189,10 @@ remove_monit() {
 }
 
 usage(){
+    if [ "" = "${1:-}" ]; then
+        usage "-h"
+        return 0
+    fi
     case "${1}" in
     start)
         echo "${0} start"
@@ -207,7 +211,7 @@ usage(){
         echo "    show status of minecraft server and monit status"
         ;;
     backup)
-        if [ -z "${2}" ]; then
+        if [ "" = "${2:-}" ]; then
             echo "${0} backup subcommand"
             echo ""
             echo "subcommand:"
@@ -244,7 +248,7 @@ usage(){
         fi
         ;;
     monit)
-        if [ -z "${2}" ]; then
+        if [ "" = "${2:-}" ]; then
             echo "${0} monit subcommand"
             echo ""
             echo "subcommand:"
@@ -271,7 +275,7 @@ usage(){
         fi
         ;;
     motd)
-        if [ -z "${2}" ]; then
+        if [ "" = "${2:-}" ]; then
             echo "${0} motd subcommand"
             echo ""
             echo "subcommand:"
@@ -311,7 +315,7 @@ usage(){
     return 0
 }
 
-if [ "--help" = "${@:$#:1}" ] || [ "-h" = "${@:$#:1}" ]; then
+if [ "" = "${@:-}" ] || [ "--help" = "${@:$#:1}" ] || [ "-h" = "${@:$#:1}" ]; then
     usage "${@}"
     exit 0
 fi
