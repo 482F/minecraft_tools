@@ -12,7 +12,7 @@ USERNAME='normal'
 SCNAME='minecraft'
  
 # minecraft_serverディレクトリ
-MC_PATH="/home/$USERNAME/minecraft"
+MC_PATH=$(cd $(dirname "${0}"); pwd)
 
 
 SERVER_PROPERTIES="${MC_PATH}/server.properties"
