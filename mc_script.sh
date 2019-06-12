@@ -158,7 +158,18 @@ set_motd() {
     perl -pi -e "s|(?<=^motd\=).*|${NEW_MOTD}|" "${SERVER_PROPERTIES}"
 }
 
+add_monit() {
+    echo "${SCNAME}"
+    echo "check process minecraft matching \"SCREEN -AmdS minecraft java ${SCNAME}\"" > "/etc/monit.d/${SCNAME}.conf"
+    echo '    not every "0-10 12 * * *"' >> "/etc/monit.d/${SCNAME}.conf"
+    echo "    start program = "/usr/bin/sudo -u normal "${SERVER_DIR}/mc_script.sh" start"" >> "/etc/monit.d/${SCNAME}.conf"
+    echo "    stop program = "/usr/bin/sudo -u normal "${SERVER_DIR}/mc_script.sh" stop"" >> "/etc/monit.d/${SCNAME}.conf"
+    echo "    if 3 restarts within 3 cycles then timeout" >> "/etc/monit.d/${SCNAME}.conf"
+}
 
+remove_monit() {
+    rm "/etc/monit.d/${SCNAME}.conf"
+}
  
 case "$1" in
     start)
@@ -184,6 +195,12 @@ case "$1" in
         ;;
     set_motd)
         set_motd "$2"
+        ;;
+    add_monit)
+        add_monit
+        ;;
+    remove_monit)
+        remove_monit
         ;;
     *)
         echo  $"Usage: $0 {start|stop|reload|h_backup|f_backup|status|(get|set)_motd}"
