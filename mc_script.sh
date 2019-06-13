@@ -421,6 +421,8 @@ usage(){
         echo "    backup subcommand"
         echo "    monit subcommand"
         echo "    motd subcommand"
+        echo "    screen subcommand"
+        echo "    port subcommand"
         ;;
     esac
     return 0
