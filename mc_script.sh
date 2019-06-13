@@ -270,163 +270,163 @@ port_check(){
 usage(){
     case "${1:-}" in
     start)
-        echo "${0} start"
-        echo "    start minecraft server"
+        multi_line_echo "${0} start"\
+        "    start minecraft server"
         ;;
     stop)
-        echo "${0} stop"
-        echo "    stop minecraft server"
+        multi_line_echo "${0} stop"\
+        "    stop minecraft server"
         ;;
     reload)
-        echo "${0} reload"
-        echo "    stop and start minecraft server"
+        multi_line_echo "${0} reload"\
+        "    stop and start minecraft server"
         ;;
     status)
-        echo "${0} status"
-        echo "    show status of minecraft server and monit status"
+        multi_line_echo "${0} status"\
+        "    show status of minecraft server and monit status"
         ;;
     backup)
         case "${2:-}" in
         half)
-            echo "${0} backup half"
-            echo ""
-            echo "    backup a part of minecraft server's data"
+            multi_line_echo "${0} backup half"\
+            ""\
+            "    backup a part of minecraft server's data"
             ;;
         full)
-            echo "${0} backup full"
-            echo ""
-            echo "    backup all minecraft server's data"
+            multi_line_echo "${0} backup full"\
+            ""\
+            "    backup all minecraft server's data"
             ;;
         enable)
-            echo "${0} backup enable"
-            echo ""
-            echo "    enable full backup everyday 12:00 by cron"
+            multi_line_echo "${0} backup enable"\
+            ""\
+            "    enable full backup everyday 12:00 by cron"
             ;;
         disable)
-            echo "${0} backup disable"
-            echo ""
-            echo "    disable full backup everyday 12:00 by cron"
+            multi_line_echo "${0} backup disable"\
+            ""\
+            "    disable full backup everyday 12:00 by cron"
             ;;
         *)
-            echo "${0} backup subcommand"
-            echo ""
-            echo "subcommand:"
-            echo "    half"
-            echo "    full"
-            echo "    enable"
-            echo "    disable"
+            multi_line_echo "${0} backup subcommand"\
+            ""\
+            "subcommand:"\
+            "    half"\
+            "    full"\
+            "    enable"\
+            "    disable"
             ;;
         esac
         ;;
     monit)
         case "${2:-}" in
         add)
-            echo "${0} monit add"
-            echo ""
-            echo "    make conf file in /etc/monit.d/ and reload monit"
+            multi_line_echo "${0} monit add"\
+            ""\
+            "    make conf file in /etc/monit.d/ and reload monit"
             ;;
         remove)
-            echo "${0} monit remove"
-            echo ""
-            echo "    remove conf file in /etc/monit.d/ and reload monit"
+            multi_line_echo "${0} monit remove"\
+            ""\
+            "    remove conf file in /etc/monit.d/ and reload monit"
             ;;
         *)
-            echo "${0} monit subcommand"
-            echo ""
-            echo "subcommand:"
-            echo "    add"
-            echo "    remove"
-            echo "    monit command"
-            echo "        ex) ${0} monit {status|monitor|unmonitor...}"
+            multi_line_echo "${0} monit subcommand"\
+            ""\
+            "subcommand:"\
+            "    add"\
+            "    remove"\
+            "    monit command"\
+            "        ex) ${0} monit {status|monitor|unmonitor...}"
             ;;
         esac
         ;;
     motd)
         case "${2:-}" in
         get)
-            echo "${0} motd get"
-            echo ""
-            echo "    print motd in server.properties (description which is displaied in server list)"
+            multi_line_echo "${0} motd get"\
+            ""\
+            "    print motd in server.properties (description which is displaied in server list)"
             ;;
         set)
-            echo "${0} motd set"
-            echo ""
-            echo "    set motd STRING in server.properties (description which is displaied in server list)"
+            multi_line_echo "${0} motd set"\
+            ""\
+            "    set motd STRING in server.properties (description which is displaied in server list)"
             ;;
         *)
-            echo "${0} motd subcommand"
-            echo ""
-            echo "subcommand:"
-            echo "    get"
-            echo "    set STRING"
+            multi_line_echo "${0} motd subcommand"\
+            ""\
+            "subcommand:"\
+            "    get"\
+            "    set STRING"
             ;;
         esac
         ;;
     screen)
         case "${2:-}" in
         attach)
-            echo "${0} screen attach"
-            echo ""
-            echo "    attach minecraft server's screen session"
+            multi_line_echo "${0} screen attach"\
+            ""\
+            "    attach minecraft server's screen session"
             ;;
         *)
-            echo "${0} screen subcommand"
-            echo ""
-            echo "subcommand:"
-            echo "    attach"
+            multi_line_echo "${0} screen subcommand"\
+            ""\
+            "subcommand:"\
+            "    attach"
         esac
         ;;
     port)
         case "${2:-}" in
         get)
-            echo "${0} port get"
-            echo ""
-            echo "    get server's port"
+            multi_line_echo "${0} port get"\
+            ""\
+            "    get server's port"
             ;;
         set)
-            echo "${0} port set PORTNUM"
-            echo ""
-            echo "    set server's port PORTNUM and change setting of iptables"
+            multi_line_echo "${0} port set PORTNUM"\
+            ""\
+            "    set server's port PORTNUM and change setting of iptables"
             ;;
         open)
-            echo "${0} port open"
-            echo ""
-            echo "    open server's port by iptables according to allowed_ip_list.txt"
+            multi_line_echo "${0} port open"\
+            ""\
+            "    open server's port by iptables according to allowed_ip_list.txt"
             ;;
         close)
-            echo "${0} port close"
-            echo ""
-            echo "    close server's port by iptables"
+            multi_line_echo "${0} port close"\
+            ""\
+            "    close server's port by iptables"
             ;;
         check)
-            echo "${0} port check"
-            echo ""
-            echo "    show which ip address are allowed to access"
+            multi_line_echo "${0} port check"\
+            ""\
+            "    show which ip address are allowed to access"
             ;;
         *)
-            echo "${0} port subcommand"
-            echo ""
-            echo "subcommand:"
-            echo "    set"
-            echo "    get"
-            echo "    open"
-            echo "    close"
-            echo "    check"
+            multi_line_echo "${0} port subcommand"\
+            ""\
+            "subcommand:"\
+            "    set"\
+            "    get"\
+            "    open"\
+            "    close"\
+            "    check"
         esac
         ;;
     *)
-        echo "${0} arguments"
-        echo ""
-        echo "arguments:"
-        echo "    start"
-        echo "    stop"
-        echo "    reload"
-        echo "    status"
-        echo "    backup subcommand"
-        echo "    monit subcommand"
-        echo "    motd subcommand"
-        echo "    screen subcommand"
-        echo "    port subcommand"
+        multi_line_echo "${0} arguments"\
+        ""\
+        "arguments:"\
+        "    start"\
+        "    stop"\
+        "    reload"\
+        "    status"\
+        "    backup subcommand"\
+        "    monit subcommand"\
+        "    motd subcommand"\
+        "    screen subcommand"\
+        "    port subcommand"
         ;;
     esac
     return 0
