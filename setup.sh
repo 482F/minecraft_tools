@@ -16,4 +16,7 @@ echo "${SERVERS}" | while read SERVER; do
     if [ ! -f "${SERVER}/mc_script.sh" ]; then
         ln -s "${SCRIPT_DIR}/mc_script.sh" "${SERVER}/mc_script.sh"
     fi
+    if [ ! -f "${SERVER}/allowed_ip_list.txt" ]; then
+        ln -s "${SCRIPT_DIR}/allowed_ip_list.txt" "${SERVER}/allowed_ip_list.txt"
+    fi
 done
