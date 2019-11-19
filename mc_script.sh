@@ -43,7 +43,7 @@ XMS='1024M'
  
 ## バックアップ用設定
 # バックアップ格納ディレクトリ
-BK_DIR="${MC_DIR}/backups/${SERVICENAME}"
+BK_DIR="${MC_DIR}/backups/${SCNAME}"
  
 # バックアップ取得時間
 BK_TIME=`date +%Y%m%d-%H%M%S`
@@ -132,7 +132,7 @@ h_backup() {
 }
  
 f_backup() {
-    if pgrep -f $SERVICE > /dev/null; then
+    if pgrep -f "${SERVICE}" > /dev/null; then
         echo "Full backup start minecraft data..."
         send_command_to_screen "say サーバーの再起動が約 10 秒後に行われます。"
         send_command_to_screen "save-all"
@@ -140,13 +140,12 @@ f_backup() {
         send_command_to_screen "stop"
         echo "Stopped minecraft_server"
         echo "Full Backup start ..."
-        screen -ls
-        tar cfvz $FULL_BK_NAME $SERVER_DIR
+        tar cfvz "${FULL_BK_NAME}" -C / "${SERVER_DIR#/}"
         sleep 10
         echo "Full Backup compleate!"
-        find $BK_DIR -name "mc_backup_full*.tar.gz" -type f -mtime +$BK_GEN -exec rm {} \;
-        echo "Starting $SERVICE..."
-        screen -AmdS $SCNAME java -Xmx$XMX -Xms$XMS -jar $SERVICE nogui
+        find "${BK_DIR}" -name "mc_backup_full*.tar.gz" -type f -mtime +$BK_GEN -exec rm {} \;
+        echo "Starting ${SERVICE}..."
+        screen -AmdS ${SCNAME} java -Xmx$XMX -Xms$XMS -jar ${SERVICE} nogui
     else
         echo "$SERVICE was not runnning."
     fi
@@ -161,14 +160,18 @@ disable_backup(){
     CRONCONF=$(sed -e "s@0 12 \* \* \* ${SERVER_DIR}/mc_script.sh backup full@@g" <(echo "${CRONCONF}"))
     (echo "${CRONCONF}") | crontab -
 }
+
+status_full() {
+    sudo monit status "${SCNAME}"
+    status
+}
  
 status() {
-    sudo monit status "${SCNAME}"
     if pgrep -f $SERVICE > /dev/null; then
-        echo "$SERVICE is already running!"
+        echo "running"
         exit 0
     else
-        echo "$SERVICE is not running!"
+        echo "not running"
         exit 0
     fi
 }
