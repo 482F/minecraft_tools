@@ -270,6 +270,11 @@ port_check(){
     return 0
 }
 
+kick(){
+    send_command_to_screen "kick ${1}"
+    return 0
+}
+
 usage(){
     case "${1:-}" in
     start)
@@ -417,6 +422,9 @@ usage(){
             "    check"
         esac
         ;;
+    kick)
+        multi_line_echo "${0} kick username"
+        ;;
     *)
         multi_line_echo "${0} arguments"\
         ""\
@@ -529,6 +537,9 @@ port)
         usage port
         exit 1
     esac
+    ;;
+kick)
+    kick "${2:-}"
     ;;
 *)
     usage
